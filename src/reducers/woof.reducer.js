@@ -9,7 +9,7 @@ export const woofInitialState = {
  * @param {woofAction} action
  */
 const woofReducer = (state = woofInitialState, action) => {
-  const { type, payload } = action;
+  const { type } = action;
   switch (type) {
     default:
       return state;
