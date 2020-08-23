@@ -2,9 +2,7 @@
 
 https://puppymiami.net/
 
-
 ### AWS Lamda functions
-
 
 #### redirecting client routes
 
@@ -30,7 +28,6 @@ exports.handler = async (event, x, cb) => {
 };
 ```
 
-
 ### applying security headers
 
 Cloudfront event (viewer response)
@@ -47,7 +44,7 @@ exports.handler = (event, context, callback) => {
 
   response.headers['content-security-policy'] = [{
     key: 'Content-Security-Policy',
-    value: "default-src 'self'"
+    value: "default-src 'self' 'unsafe-inline'"
   }];
 
   response.headers['x-xss-protection'] = [{
@@ -66,5 +63,60 @@ exports.handler = (event, context, callback) => {
   }];
 
   callback(null, response);
+};
+```
+
+#### redirect example
+
+Cloudfront event (origin request)
+
+```js
+exports.handler = async (event, ctx, cb) => {
+    const request = event.Records[0].cf.request;
+
+    const response = {
+        status: '302',
+        statusDescription: 'found',
+        headers: {
+            location: [{
+                key: 'Location',
+                value: 'https://bit.ly/very-secret'
+            }]
+        }
+    }
+
+    if (request.uri === '/secret') {
+        return cb(null, response);
+    }
+
+    cb(null, request);
+};
+```
+
+
+#### Origin response
+
+Cloudfront event (origin response)
+
+```js
+exports.handler = async (event, ctx, cb) => {
+    const request = event.Records[0].cf.request;
+
+    const response = {
+        status: '302',
+        statusDescription: 'found',
+        headers: {
+            location: [{
+                key: 'Location',
+                value: 'https://www.youtube.com/watch?v=I-CFzwb7J0M'
+            }]
+        }
+    }
+
+    if (request.uri === '/secret') {
+        return cb(null, response);
+    }
+
+    cb(null, request);
 };
 ```
