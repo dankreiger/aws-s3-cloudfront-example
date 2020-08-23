@@ -80,34 +80,6 @@ exports.handler = async (event, ctx, cb) => {
         headers: {
             location: [{
                 key: 'Location',
-                value: 'https://bit.ly/very-secret'
-            }]
-        }
-    }
-
-    if (request.uri === '/secret') {
-        return cb(null, response);
-    }
-
-    cb(null, request);
-};
-```
-
-
-#### Origin response
-
-Cloudfront event (origin response)
-
-```js
-exports.handler = async (event, ctx, cb) => {
-    const request = event.Records[0].cf.request;
-
-    const response = {
-        status: '302',
-        statusDescription: 'found',
-        headers: {
-            location: [{
-                key: 'Location',
                 value: 'https://www.youtube.com/watch?v=I-CFzwb7J0M'
             }]
         }
@@ -120,3 +92,4 @@ exports.handler = async (event, ctx, cb) => {
     cb(null, request);
 };
 ```
+
